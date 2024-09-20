@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: livenessprobe2-test
+  labels:
+    app: livenessprobe2-test
+spec:
+  containers:
+    - name: livenessprobe2-test
+      image: nginx:1.19.1
+      imagePullPolicy: IfNotPresent
+      ports:
+        - name: nginx-http-get
+          containerPort: 80
+      livenessProbe:
+        httpGet:
+          port: 80
+          path: /index.html
+        initialDelaySeconds: 1
+        periodSeconds: 3
+        timeoutSeconds: 10
+  restartPolicy: Always

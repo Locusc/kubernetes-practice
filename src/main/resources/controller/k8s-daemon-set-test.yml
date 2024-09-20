@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: DaemonSet # 无副本 确保全部Node上运行一个Pod的副本 使用场景: 日志收集,服务监控
+metadata:
+  name: deploymentdemo
+  labels:
+    app: deploymentdemo
+spec:
+  selector:
+    matchLabels:
+      app: deploymentdemo
+  template:
+    metadata:
+      name: deploymentdemo
+      labels:
+        app: deploymentdemo
+    spec:
+      containers:
+        - name: deploymentdemo
+          image: nginx:1.17.10-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+      restartPolicy: Always

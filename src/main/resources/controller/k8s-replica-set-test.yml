@@ -1,0 +1,27 @@
+apiVersion: apps/v1  #api版本定义
+kind: ReplicaSet  #定义资源类型为ReplicaSet
+metadata:  #元数据定义
+  name: replicasetdemo
+  labels:
+    app: replicasetdemo
+spec:  #ReplicaSet的规格定义
+  replicas: 2  #定义副本数量为2个
+  template:  #pod的模板定义
+    metadata:  #pod的元数据定义
+      name: replicasetdemo   #自定义pod的名称
+      labels:   #定义pod的标签，需要和上面定义的标签一致，也可以多出其他标签
+        app: replicasetdemo
+        # release: canary
+        # environment: qa
+    spec:  #pod的规格定义
+      containers:  #容器定义
+        - name: replicasetdemo  #容器名称
+          image: nginx:1.17.10-alpine  #容器镜像
+          imagePullPolicy: IfNotPresent
+          ports:  #暴露端口
+            - name: http
+              containerPort: 80
+  selector: #标签选择器，定义匹配pod的标签
+    matchLabels:
+      app: replicasetdemo
+      # release: canary
