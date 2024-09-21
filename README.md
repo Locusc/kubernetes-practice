@@ -30,3 +30,26 @@ kubectl rollout resume deploy deploymentdemo
 
 kubectl rollout history deployment deploymentdemo --revision=1 (查询历史版本)
 kubectl rollout undo deployment deploymentdemo -to-revision=1 (版本回滚)
+
+# 集群注册私服
+kubectl create secret docker-registry harbor-59.3 \
+--docker-server=192.168.59.3:5000 --docker-username=admin \
+--docker-password=Harbor12345 --docker-email=locusc@163.cn
+
+# configmap
+kubectl create configmap mysql-ini --from-file=my.cnf (指定文件名方式生产配置)
+kubectl get configmap mysql-ini -o yaml > mariadb-configmap.yml (反向生产k8s-yaml)
+
+# labels操作
+kubectl label nodes <node-name> <label-key>=<label-value>
+kubectl label nodes <node-name> <label-key>=<label-value> --overwrite
+kubectl label nodes <node-name> <label-key>-
+kubectl get nodes --show-labels
+
+# 资源亲和度(与污点相反)
+spec.affinity.nodeAffinity
+spec.affinity.podAffinity
+
+# 调度污点-节点 -> 调度容忍度(对污点的容忍度)-pod
+kubectl taint nodes node1 key1=value1:NoSchedule
+kubectl taint nodes node1 key1:NoSchedule-
