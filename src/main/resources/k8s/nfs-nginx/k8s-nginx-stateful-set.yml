@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx-deployment
+spec:
+  replicas: 3
+  serviceName: nginx-svc
+  template:
+    metadata:
+      name: nginx-deployment
+      labels:
+        app: nginx-deployment
+    spec:
+      containers:
+        - name: nginx-deployment
+          image: nginx:1.17.10-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html
+              name: nginx-volume
+      restartPolicy: Always
+  volumeClaimTemplates: # 集群服务分别挂载不同的卷
+    - metadata:
+        name: nginx-volume
+        annotations:
+          volume.beta.kubernetes.io/storage-class: "nfs-storage-nginx"
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+  selector:
+    matchLabels:
+      app: nginx-deployment
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx-deployment
+  ports:
+    - port: 80
+  clusterIP: None
