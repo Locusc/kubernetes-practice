@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubernetes-practice
+  labels:
+    app: kubernetes-practice
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: kubernetes-practice
+      labels:
+        app: kubernetes-practice
+    spec:
+      imagePullSecrets:
+        - name: harbor-59.3
+      containers:
+        - name: kubernetes-practice
+          image: 192.168.59.3:5000/public/kubernetes-practice:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+      restartPolicy: Always
+  selector:
+    matchLabels:
+      app: kubernetes-practice
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubernetes-practice-svc
+spec:
+  selector:
+    app: kubernetes-practice
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+      nodePort: 30099
+  type: NodePort
