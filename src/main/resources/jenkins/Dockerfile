@@ -1,21 +1,24 @@
 # https://updates.jenkins.io/current/update-center.json
 
-FROM 192.168.59.3:5000/public/jenkins/jenkins:2.401.3-lts-alpine
+FROM 192.168.59.3:5000/public/jenkins/jenkins:2.401.3-lts-centos7
 
 MAINTAINER https://github.com/Locusc
 
 # 镜像默认用户无法执行以下操作 - jenkins用户
 USER root
 
-#RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" >> /etc/apk/repositories && \
-#    echo "http://mirrors.aliyun.com/alpine/latest-stable/community/" >> /etc/apk/repositories
+#RUN echo -e 'https://mirrors.aliyun.com/alpine/v3.6/main/\nhttps://mirrors.aliyun.com/alpine/v3.6/community/' > /etc/apk/repositories \
+#    && apk update \
+#    && apk upgrade
+#
+#RUN apk --update --no-cache add curl bash tzdata && \
+#    rm -rf /var/cache/apk/*
 
-RUN echo -e 'https://mirrors.aliyun.com/alpine/v3.6/main/\nhttps://mirrors.aliyun.com/alpine/v3.6/community/' > /etc/apk/repositories \
-    && apk update \
-    && apk upgrade
-
-RUN apk --update --no-cache add curl bash tzdata docker-cli && \
-    rm -rf /var/cache/apk/*
+#COPY CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
+#
+#RUN yum -y install curl bash tzdata && \
+#    yum clean all && \
+#    yum makecache
 
 ENV TZ Asia/Shanghai
 ENV JENKINS_UC https://updates.jenkins-zh.cn

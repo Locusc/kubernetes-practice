@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  jenkins:
+    image: locusc/jenkins:2.401.3-lts-centos7
+    container_name: jenkins
+    ports:
+      - "8080:8080"
+      - "50000:50000"
+    user: root
+    environment:
+      JAVA_OPTS: -Duser.timezone=Asia/Shanghai
+    restart: always
+    volumes:
+      - /app/jenkins/data:/var/jenkins_home
+      - /usr/bin/docker:/usr/bin/docker
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/docker/daemon.json:/etc/docker/daemon.json
