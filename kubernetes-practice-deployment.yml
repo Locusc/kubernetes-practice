@@ -16,7 +16,7 @@ spec:
         - name: harbor-59.3
       containers:
         - name: kubernetes-practice
-          image: 192.168.59.3:5000/public/kubernetes-practice:v1
+          image: REGISTRY_ADDRESS:<IMAGE_TAG>
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

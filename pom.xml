@@ -27,19 +27,6 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>huawei-cloud</id>
-            <name>huawei</name>
-            <url>https://mirrors.huaweicloud.com/repository/maven/</url>
-        </repository>
-        <repository>
-            <id>aliyun-maven</id>
-            <name>aliyun</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-        </repository>
-    </repositories>
-
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>

@@ -7,18 +7,13 @@ MAINTAINER https://github.com/Locusc
 # 镜像默认用户无法执行以下操作 - jenkins用户
 USER root
 
+# alpine-linux不支持直接使用宿主机的docker
 #RUN echo -e 'https://mirrors.aliyun.com/alpine/v3.6/main/\nhttps://mirrors.aliyun.com/alpine/v3.6/community/' > /etc/apk/repositories \
 #    && apk update \
 #    && apk upgrade
 #
 #RUN apk --update --no-cache add curl bash tzdata && \
 #    rm -rf /var/cache/apk/*
-
-#COPY CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo
-#
-#RUN yum -y install curl bash tzdata && \
-#    yum clean all && \
-#    yum makecache
 
 ENV TZ Asia/Shanghai
 ENV JENKINS_UC https://updates.jenkins-zh.cn
@@ -33,13 +28,16 @@ ENV MAVEN_VERSION 3.6.3
 ENV MAVEN_HOME /opt/maven
 ENV MAVEN_URL https://archive.apache.org/dist/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz
 
-COPY apache-maven-3.6.3-bin.tar.gz /tmp/maven.tar.gz
+COPY apache-maven-${MAVEN_VERSION}-bin.tar.gz /tmp/maven.tar.gz
 
-RUN mkdir -p /opt \
+RUN mkdir -p /opt && \
     # && curl -fsSL ${MAVEN_URL} -o /tmp/maven.tar.gz \
-    && tar -xzf /tmp/maven.tar.gz -C /opt \
-    && ln -s /opt/apache-maven-${MAVEN_VERSION} /opt/maven \
-    && rm /tmp/maven.tar.gz
+    tar -xzf /tmp/maven.tar.gz -C /opt
+
+COPY settings.xml /opt/apache-maven-${MAVEN_VERSION}/conf
+
+RUN ln -s /opt/apache-maven-${MAVEN_VERSION} /opt/maven && \
+    rm /tmp/maven.tar.gz
 
 # 设置 Maven 环境变量
 ENV PATH=${MAVEN_HOME}/bin:${PATH}

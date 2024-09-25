@@ -1,0 +1,76 @@
+@startuml
+!define RECTANGLE class
+!define DIAMOND diamond
+!define ARROW -->
+
+skinparam backgroundColor #F9F9F9
+skinparam rectangle {
+    BackgroundColor #FFFAE5
+    BorderColor #BEBEBE
+    FontColor #000000
+}
+skinparam diamond {
+    BackgroundColor #FFEBE5
+    BorderColor #BEBEBE
+    FontColor #000000
+}
+
+RECTANGLE "1. 环境检查" as envCheck
+RECTANGLE "2. 拉取代码" as pullCode
+RECTANGLE "3. 编译项目" as compileProject
+RECTANGLE "4. 参数替换" as paramReplace
+RECTANGLE "5. 构建镜像" as buildImage
+RECTANGLE "6. 部署到 K8S 集群" as deployK8S
+DIAMOND "Webhook 事件" as webhookEvent
+
+envCheck ARROW pullCode : "执行"
+pullCode ARROW compileProject : "代码拉取完成"
+compileProject ARROW paramReplace : "编译完成"
+paramReplace ARROW buildImage : "参数替换完成"
+buildImage ARROW deployK8S : "镜像构建完成"
+
+webhookEvent ARROW pullCode : "Push/Merge 事件触发"
+pullCode --> webhookEvent : "检查事件类型"
+
+note right of envCheck
+  环境检查:
+  - Java 版本
+  - Maven 版本
+  - Git 版本
+  - Docker 版本
+end note
+
+note right of pullCode
+  拉取代码:
+  - 检查 User-Agent
+  - 切换分支
+  - 拉取最新代码
+end note
+
+note right of compileProject
+  编译项目:
+  - 清理和打包
+  - 复制生成的 JAR
+end note
+
+note right of paramReplace
+  参数替换:
+  - 替换 Dockerfile 中的占位符
+  - 替换 Kubernetes 资源文件中的镜像标签
+end note
+
+note right of buildImage
+  构建镜像:
+  - 使用 Dockerfile 构建镜像
+  - 登录到 Docker 注册中心
+  - 推送镜像到注册中心
+end note
+
+note right of deployK8S
+  部署到 K8S 集群:
+  - SSH 连接到 K8S 节点
+  - 拷贝 Kubernetes 配置文件
+  - 应用 Kubernetes 配置
+end note
+
+@enduml

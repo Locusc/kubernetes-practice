@@ -4,10 +4,10 @@ services:
   jenkins:
     image: locusc/jenkins:2.401.3-lts-centos7
     container_name: jenkins
+    user: root
     ports:
       - "8080:8080"
       - "50000:50000"
-    user: root
     environment:
       JAVA_OPTS: -Duser.timezone=Asia/Shanghai
     restart: always
@@ -16,3 +16,4 @@ services:
       - /usr/bin/docker:/usr/bin/docker
       - /var/run/docker.sock:/var/run/docker.sock
       - /etc/docker/daemon.json:/etc/docker/daemon.json
+      - /root/.ssh:/root/.ssh
