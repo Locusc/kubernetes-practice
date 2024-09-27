@@ -6,7 +6,7 @@ pipeline {
         HARBOR_ADDRESS = "192.168.59.3:5000/public"
         HARBOR_USERNAME = "admin"
         HARBOR_PASSWORD = "Harbor12345"
-        PROJECT = "ci-cd"
+        PROJECT = "ci-cd-example"
         APP_NAME = "kubernetes-practice"
         DOCKERFILE_PATH = "."
         K8S_REMOTE_USER = "root"
